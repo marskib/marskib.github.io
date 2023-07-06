@@ -1,4 +1,4 @@
-'use strict'; //aaaaaaa
+'use strict';
 
 //default table of phrases in case localStorage is empty:
 let phrases = [

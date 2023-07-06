@@ -13,12 +13,15 @@
     margin-left: .5em;
 }
 
+<<<<<<< HEAD
+=======
 html {
     /* musi byc kwadrat, zeby figury nie byly koslawe: */
     /* --szer-ski: 80vh; */
     /* --wys-ski:  80vh; */
 }
 
+>>>>>>> 8d9682b7690539e70ede59e62f0f1447f1be5465
 body {
     /* background-color: #fef3dd */
     background-color: yellow;
@@ -52,20 +55,19 @@ div#homepage a {
     color: gray;
 }
 
-
-@media (max-width:1024px) {
-    :root {
-        --szer-ski: 90vw;
-        --wys-ski:  90vw;
-    }
-    
-    div.content {
-        margin-top: calc(calc(100vh - var(--wys-ski))/8);
-    }
-
-    div#homepage {
-        font-size: 1.8em;
-    }
-
-   
+.na-mobilnych {
+    display: none;
 }
+
+/* ----------- na mobilnych aplikacja nie dziala ---------------------- */
+@media (max-width:800px)  {
+    #canvas, div {
+        display: none;
+    }
+
+    .na-mobilnych {
+        display: block;
+    }
+
+ }
+ /* ------------------------------------ */
