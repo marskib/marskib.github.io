@@ -1,0 +1,86 @@
+body {
+    background-color: #aaa;
+}
+
+div {
+    /* border: 1px solid maroon; */
+    margin-bottom: 1vh;    
+}
+
+button {
+    height: 60%;
+    margin-right: 2vw;
+}
+
+.center-inside {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#div-options {
+    border-style: solid;
+    width:400px;
+    height:100px;
+    background-color: lightgray;
+}
+
+#div-options li {
+    margin-top: 10px;
+}
+
+ul {
+    list-style-type: none;
+}
+
+#div-item-list {
+    width: 80%;
+    margin: 10px 0;
+    border: 2px solid black;    
+}
+
+#item-list li {
+    display: inline-block;
+    width: 25%;
+    font-size: 1.5em;
+    /* font-size :1em;  bylo niezle */
+    font-family: sans-serif;
+}
+
+input {
+/* bylo niezle...
+    height: 20px;
+    width: 20px;
+*/
+    height: 1.5rem;
+    width: 1.5rem;    
+}
+
+#start-link a:hover,
+#start-link a:active {
+    color: white;
+}
+
+#start-link {
+    text-decoration: none;
+    color: black;
+    background-color: green;
+    font-weight: bold;
+    padding: 8px 56px;
+    border-radius: 8px;
+}
+
+div#homepage {
+    position: absolute;
+    font-size: 2em;
+    left: 7px;
+    margin-bottom: 2px;
+}
+
+div#homepage a {
+    color: gray;
+}
+
+
+
+
