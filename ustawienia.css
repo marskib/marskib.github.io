@@ -2,11 +2,6 @@ body {
     background-color: #aaa;
 }
 
-div {
-    /* border: 1px solid maroon; */
-    margin-bottom: 1vh;    
-}
-
 button {
     height: 60%;
     margin-right: 2vw;
@@ -19,7 +14,8 @@ button {
 }
 
 #div-options {
-    border-style: solid;
+    margin-top: 1vh;
+    border: 1px solid black;
     width:400px;
     height:100px;
     background-color: lightgray;
@@ -43,7 +39,6 @@ ul {
     display: inline-block;
     width: 25%;
     font-size: 1.5em;
-    /* font-size :1em;  bylo niezle */
     font-family: sans-serif;
 }
 
@@ -79,6 +74,17 @@ div#homepage {
 
 div#homepage a {
     color: gray;
+}
+
+
+@media (max-height:800px)  {
+    input {
+        height: 1rem;
+        width: 1rem;    
+    }
+    #item-list li {
+        font-size: 1em;
+    }    
 }
 
 

@@ -4,29 +4,9 @@
     box-sizing: border-box;
 }
 
-.my-button {
-    width: 7em;
-    /* height: 50px; */
-    height: 1.8em;
-    font-weight: bold;
-    font-size: 2em;
-    margin-left: .5em;
-}
-
-<<<<<<< HEAD
-=======
-html {
-    /* musi byc kwadrat, zeby figury nie byly koslawe: */
-    /* --szer-ski: 80vh; */
-    /* --wys-ski:  80vh; */
-}
-
->>>>>>> 8d9682b7690539e70ede59e62f0f1447f1be5465
 body {
-    /* background-color: #fef3dd */
     background-color: yellow;
 }
-
 
 div.content {
     width: var(--szer-ski);
@@ -34,7 +14,6 @@ div.content {
     margin-top: calc(calc(100vh - var(--wys-ski))/2);
     margin-left: auto;
     margin-right: auto;
-    /* border: 2px solid black; */
 }
 
 canvas {
@@ -43,23 +22,36 @@ canvas {
     cursor: pointer;
 }
 
+.div-oper-buttons {
+    float:right;
+    margin-right:1em;
+    border:solid 1px maroon;
+}
+
+.my-button {
+    width: 18vw;
+    height: 1.8em;
+    font-weight: bold;
+    font-size: 2em;
+    margin-right: 2px;
+}
 
 div#homepage {
+    border: solid 1px maroon;
     position: absolute;
-    font-size: 2.5em;
-    left: 7px;
-    bottom: 10px;
+    font-size: 4vh;
+    left: 1vw;
 }
 
 div#homepage a {
     color: gray;
 }
 
+/* ----------- na mobilnych aplikacja nie dziala ---------------------- */
 .na-mobilnych {
     display: none;
 }
 
-/* ----------- na mobilnych aplikacja nie dziala ---------------------- */
 @media (max-width:800px)  {
     #canvas, div {
         display: none;
