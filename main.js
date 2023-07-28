@@ -16,19 +16,19 @@ let canvas  = document.getElementById('canvas');
 let ctx = canvas.getContext('2d');
 
 
-canvas.width  = window.innerWidth-30;
+canvas.width  = window.innerWidth-7;
 canvas.height = parseInt(0.93*window.innerHeight-10);
 
-canvas.style.border = '5px solid red';
+canvas.style.border = '3px solid gray';
 canvas.style.letterSpacing = '.3em'; //Chrome only
 
 let canvas_width = canvas.width;
 let canvas_height = canvas.height;
 
 //"goracy" Obszar, namiary:
-const AREA_X1 = parseInt(0.03*canvas.width);
+const AREA_X1 = parseInt(0.02*canvas.width);
 const AREA_Y1 = parseInt(0.75*canvas.height);
-const AREA_X2 = parseInt(0.97*canvas.width);
+const AREA_X2 = parseInt(0.98*canvas.width);
 const AREA_Y2 = parseInt(0.95*canvas.height);
 /* ******************* */
 
@@ -51,14 +51,15 @@ let startX;
 let startY;
 
 class Word {
-/* Wyraz zobrazowany na ekranie.
+/* Wyraz/Litera zobrazowany(a) na ekranie.
    Obszar Wyrazu okreslany jest przez
    prostokąt/pudelko (może byc niewidoczne).
 */
     static #elemCount = 0;
     static #isBox = false;  //czy wyswietlac pudełko?
     
-    #text;          //tekst Wyrazu
+    #text;               //tekst Wyrazu
+    #color = "black";    //kolor wyrazu
     
     //Pudelko na Wyraz.
     //w jego obrebie bedzie aktywna myszka; ulatwia ciagniecie i 'trimowanie'
@@ -83,9 +84,9 @@ class Word {
         ctx.font = '600 9vh verdana, sans-serif';
         let metrics = ctx.measureText(word);
         let actualHeight = parseInt(metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent);
-        this.#boxWidth  = parseInt(metrics.width + ctx.measureText('l1').width);
+        this.#boxWidth  = parseInt(metrics.width + ctx.measureText('l').width);
         this.#boxHeight = parseInt(actualHeight + ctx.measureText('b').width);
-        this.#textX = parseInt(this.#boxX + ctx.measureText('b').width);
+        this.#textX = parseInt(this.#boxX + this.#boxWidth/2 - ctx.measureText(this.#text).width/2 );
         this.#textY = parseInt(this.#boxY + ((this.#boxHeight+actualHeight)/2)-3);
     }
 
@@ -94,8 +95,9 @@ class Word {
     static setIsBox(value) { Word.#isBox = value; }
 
     getText  = function() {return this.#text;}
-    setText  = function(value) { this.#text = value;}
+    setText  = function(value) {this.#text = value;}
     getTextX = function() {return this.#textX;}
+    setColor = function(value) {this.#color = value;}
 
     getBoxX = function() {return this.#boxX;}
     getBoxY = function() {return this.#boxY;}
@@ -106,6 +108,7 @@ class Word {
         ctx.save();
         ctx.strokeStyle = (Word.#isBox)? "black" : "transparent";
         ctx.strokeRect(this.#boxX, this.#boxY, this.#boxWidth, this.#boxHeight);
+        ctx.fillStyle=this.#color;
         ctx.fillText(this.#text, this.#textX, this.#textY);
         ctx.restore();
     }
@@ -162,6 +165,7 @@ function hardCodeCellsPositions() {
         let row = Math.floor(i/4);
         let col = i%4;
         positions.push(new Cell(DIST_FROM_LEFT + col*DCOL, DIST_FROM_TOP+ row*DROW));
+        // positions.push(new Cell(DIST_FROM_LEFT + 0*DCOL, DIST_FROM_TOP+ row*DROW));
     }
 }
 
@@ -227,7 +231,8 @@ function trimAndShowThePhrase(phr) {
 function allInArea(){
 //What we do after all the words have been placed in the 'hot' Area.
 //1.sprawdzenie, czy poprawnie ulozono
-//2.'trymowanie' - wyrownanie wyrazow wzdluz srodkowej linii
+//2.if ok - 'trymowanie' - wyrownanie wyrazow wzdluz srodkowej linii
+//3.sound effects
 
     //Sortujemy wyrazy w Area pod wzgledem polozenia - 
     //(najbardziej na lewo -> najbardziej na lewo w tablicy roboczej).
@@ -246,20 +251,20 @@ function allInArea(){
     words.forEach(e => phrBeingGuessed.push(e.getText()));
 
     //actual comparing:
-    if (phrInArea.toString() === phrBeingGuessed.toString()) {
-        odegrajEfekt('ding.mp3',200)
+    if (phrInArea.toString() === phrBeingGuessed.toString()) { //Zwyciestwo!!!
+        odegrajEfekty('ding.mp3',100, 'oklaski.ogg',800);
         setTimeout(trimAndShowThePhrase,500, currentPhrase);
         turnHandlersOff();
+        setTimeout(enableButton, 1200, bNextTask);
     } else {
-        odegrajEfekt("zle.mp3", 50);
-        // setTimeout(()=>words[current_word_index].shake(), 170);
+        odegrajEfekty("zle.mp3", 50);
         stopAnim = false;
         animate();
         setTimeout(()=>stopAnim = true,500);
     }
 }
 
-let isMouseInWord = function(x, y, word) {
+const isMouseInWord = function(x, y, word) {
     let word_left   = word.getBoxX();
     let word_right  = word.getBoxX() + word.getBoxWidth();
     let word_top    = word.getBoxY();
@@ -271,7 +276,7 @@ let isMouseInWord = function(x, y, word) {
     return false;
 }
 
-let mouse_down = function(event) {
+const mouse_down = function(event) {
     event.preventDefault();
 
     startX = parseInt(event.clientX);
@@ -283,34 +288,40 @@ let mouse_down = function(event) {
         if (isMouseInWord(startX, startY, word)) {
             current_word_index = index;
             draggingMode = true;
-            canvas.style.cursor = 'pointer';
+            let elemPressed = words[current_word_index];
+            elemPressed.setColor('red');
+            drawAllObjects();
             return;
         }
         index++;
     }
 }
 
-let mouse_up = function(event) {
+const mouse_up = function(event) {
     if (!draggingMode) {
         return;
     }
     event.preventDefault();
     canvas.style.cursor = 'default';
-    let dragged = words[current_word_index];
-    if (dragged.areCoordinatesInArea(AREA_X1,AREA_Y1,AREA_X2,AREA_Y2)) {
-        dragged.setIsInArea(true);
-        dragged.dragToTrimLine();
+    let elemDragged = words[current_word_index];
+    if (elemDragged.areCoordinatesInArea(AREA_X1,AREA_Y1,AREA_X2,AREA_Y2)) {
+        elemDragged.setIsInArea(true);
+        elemDragged.dragToTrimLine();
         drawAllObjects();
     } else {
-        dragged.setIsInArea(false);
+        elemDragged.setIsInArea(false);
     }
+    
+    elemDragged.setColor('black');
+    drawAllObjects();
+    
     draggingMode = false;
     if (howManyInArea() === Word.getNumberOfElements()) {
         allInArea();
     }
 }
 
-let mouse_out = function(event) {
+const mouse_out = function(event) {
     if (!draggingMode) {
         return;
     }
@@ -318,7 +329,7 @@ let mouse_out = function(event) {
     draggingMode = false;
 }
 
-let mouse_move = function(event) {
+const mouse_move = function(event) {
     //jesli wchodzimy/wychodzimy w/z obreb(u) wyrazu - zmiana wskaznika myszy:
     let mouseX = parseInt(event.clientX);
     let mouseY = parseInt(event.clientY);
@@ -387,8 +398,9 @@ const drawOnlyWordOnIdx = function(idx) {
 
 const drawHotArea = function(x1,y1,x2,y2) {
     ctx.save();
-    ctx.fillStyle = "red";
-    ctx.fillRect(x1, y1, x2-x1, y2-y1);
+    ctx.strokeStyle = "maroon";
+    ctx.lineWidth = 4;
+    ctx.strokeRect(x1, y1, x2-x1, y2-y1);
     ctx.restore();
 }
 
@@ -431,7 +443,7 @@ function placeThePhrase(phrase, where) {
         pos = getFreeRandomPosition();
         pos.setOccupied(true);
         //tworzenie wyrazu i umieszczenie w tablicy 'where':
-        let rndMod = getRandomIntInclusive(-0.1*canvas.height,+0.1*canvas.height);
+        let rndMod = getRandomIntInclusive(-0.05*canvas.height,+0.1*canvas.height);
         where.push(new Word(el, pos.x+rndMod, pos.y));    
     }
 }
@@ -440,7 +452,7 @@ function rearrangePhrase() {
 //"Wymieszanie" wyrazu na onclick na "@ button"
     placeThePhrase(currentPhrase, words);
     drawAllObjects();
-    turnHandlersOn(); //bo mogly byc wylaczone po Zwyciecstwie
+    turnHandlersOn(); //bo mogly byc wylaczone po Zwyciestwie
 }
 
 function getRandomPhrase() {
@@ -456,29 +468,48 @@ function getRandomPhrase() {
 
 function getcurrentImageObj(phrase) {
     let img  =  new Image();
-    let path = 'zasoby/' + phrase + '.webp';
+    let path = 'zasoby/' + phrase.toLowerCase() + '.webp';
     path = path.replace('..webp','.webp'); //jesli Rozsypanka, to zdanie mialo na koncu kropke, usuwamy
     img.src  =  path;
     return img;
 }
 
 function sayThePhrase(phr) {
-    disableButton(bNextTask);
+    if (!parameters.WITH_LECTOR) return;
     disableButton(bPlay);
-    let plikSnd = new Audio("zasoby/" + phr +'.ogg');
+    let plikSnd = new Audio("zasoby/" + phr.toLowerCase() +'.ogg');
     plikSnd.onended = ()=>{
-        setTimeout(enableButton, 2000, bNextTask);
+        // setTimeout(enableButton, 2000, bNextTask);
         setTimeout(enableButton, 2000, bPlay);
     }
     plikSnd.play();
 }
 
 function enableButton(b) {
-    b.style.visibility = "visible";
+   // b.style.visibility = "visible"; //old solution
+   //New solution:
+    switch (b) {
+        case bPlay:
+            b.style.visibility = "visible";       
+            break;
+        case bNextTask:
+            b.disabled = false;
+            b.style.backgroundColor = 'green';             
+            break;
+    }
 }
 
 function disableButton(b) {
-    b.style.visibility = "hidden";
+    //b.style.visibility = "hidden"; //old solution
+    switch (b) {
+        case bPlay:
+            b.style.visibility = "hidden";       
+            break;
+        case bNextTask:
+            b.disabled = true;
+            b.style.backgroundColor = 'inherit';             
+            break;
+    }
 }                                                                                                                                                                           
 
 function placeTheHint() {
@@ -494,25 +525,31 @@ function placeTheHint() {
 }
 
 function getTask() {
+    disableButton(bNextTask);        
     currentPhrase = getRandomPhrase();
     placeThePhrase(currentPhrase, words);  //umieszczenie wylosowanego zdania w tablicy words
-    currentImage  = getcurrentImageObj(currentPhrase);
+    currentImage = getcurrentImageObj(currentPhrase);
     currentImage.onload = () => {
         drawAllObjects();
         turnHandlersOn();
-    };        
+    };
     sayThePhrase(currentPhrase);
 }
 
 //------------------------------------------ START -----------------------------//
 
-//Default parameters;
-let parameters = {WITH_HINT:true, WITH_PICTURE:true};
+//Default parameters:
+let parameters = {
+    WITH_HINT:true,
+    WITH_PICTURE:true,
+    WITH_LECTOR:true,
+    WITH_REWARD:true
+};
 readParameters();
 
 //fizyczne wspolrzedne wyrazow na ekranie:
 hardCodeCellsPositions();
- //czy wyrazy maja byc w pudełkach (z settings'ow):
+//czy wyrazy maja byc w pudełkach :
 Word.setIsBox(false); 
 
 let currentPhrase = '';
@@ -521,11 +558,13 @@ let bNextTask = document.getElementById('btn-next');
 let bPlay     = document.getElementById('bplay');
 
 //-----------------------------------------------------//
- 
-//-----------------------------------------------------//
+
 bNextTask.click();
-enableButton(bPlay);
-setTimeout(enableButton,2000, bNextTask);
+
+(parameters.WITH_LECTOR)?enableButton(bPlay):disableButton(bPlay);
+
+// setTimeout(enableButton,2000, bNextTask);
+disableButton(bNextTask);
 
 
 //------------------------------ AUXILIARIES -------------------------------------
@@ -539,48 +578,34 @@ function readParameters(){
     // LKL = parseInt(localStorage.liczbaKlawiszy);
     //mozna tez tak: LKL = localStorage.getItem('liczbaKlawiszy');
 
-    //if localStorage is empty -> with pictures and with hints:
-    localStorage.getItem('zObrazkiem')   ? parameters.WITH_PICTURE = (localStorage.getItem('zObrazkiem')==="true"):    parameters.WITH_PICTURE=true;
+    //if localStorage is empty -> with pictures, with hints, with lector:
+    localStorage.getItem('zObrazkiem')   ? parameters.WITH_PICTURE = (localStorage.getItem('zObrazkiem')==="true")   : parameters.WITH_PICTURE=true;
     localStorage.getItem('zPodpowiedzia')? parameters.WITH_HINT    = (localStorage.getItem('zPodpowiedzia')==="true"): parameters.WITH_HINT=true; 
+    localStorage.getItem('zLektorem')    ? parameters.WITH_LECTOR  = (localStorage.getItem('zLektorem')==="true")    : parameters.WITH_LECTOR=true; 
+    localStorage.getItem('zOklaskami')   ? parameters.WITH_REWARD  = (localStorage.getItem('zOklaskami')==="true")   : parameters.WITH_REWARD=true; 
                 
     //if localStorage is empty -> we're getting default table of phrases,
     //but if not empty, we're getting the phrases from localStorage:
     if (localStorage.getItem('arrPhrases')) {
         phrases = localStorage.getItem('arrPhrases').split(',');
     }
-        
-    // PCT = (localStorage.getItem('zObrazkami') === "true")
-    // LEKTOR = (localStorage.getItem('zLektorem') === "true")
-    // EFEKTY = (localStorage.getItem('zEfektami') === "true")
-    // NAGRODA = (localStorage.getItem('zNagroda') === "true")
 }
 
-
-
-function odegrajEfekt(plik, delay) {
-    odegrajPlik(plik, delay);
-}
-
-function odegrajPlik(plik, delay) {
-    let plikSnd = new Audio("zasoby/" + plik);
-    setTimeout(() => plikSnd.play(), delay);
-    //lub: setTimeout( function() {plikSnd.play();},delay);
+function odegrajEfekty(plik1, delay1, plik2, delay2) {
+    let plikSnd1 = new Audio("zasoby/" + plik1);
+    setTimeout(() => plikSnd1.play(), delay1);
+    if (arguments.length === 2) return;
+    //oklaski (optional):
+    if (!parameters.WITH_REWARD) return;
+    let plikSnd2 = new Audio("zasoby/" + plik2);
+    setTimeout(() => plikSnd2.play(), delay2);
 }
 
 function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
-  }
-
-function rysujKrope(x,y) {
-    //robocze - wywalic
-        ctx.save();
-        ctx.fillStyle = "maroon";
-        ctx.fillRect(x, y, 10,10);
-        ctx.restore();
-    }
-
+}
 
 //-------animacja---------------------------------------------------------------------------
 
@@ -614,7 +639,7 @@ function animate() {
     drawThings();
     //
     postShake();
-    }
+}
       
 
       

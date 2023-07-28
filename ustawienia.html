@@ -17,13 +17,15 @@
 
 <body>
     <div class="center-inside">
-        Literowanka - Aplikacja do nauki układania wyrazów z liter. Wersja online.
+        <h3>Literowanka - Aplikacja do nauki układania wyrazów z liter. Wersja online.</h3>
     </div>
     <div class="center-inside">
-        <div id="div-options">
+        <div class="div-options center-inside">
             <ul>
-                <li><input id = "cb-with-pict" type="checkbox" >&nbsp;z obrazkiem</li>
-                <li><input id = "cb-with-hint" type="checkbox" >&nbsp;z podpowiedzią</li>
+                <li><input id = "cb-with-pict"   type="checkbox" >&nbsp;z obrazkiem</li>
+                <li><input id = "cb-with-hint"   type="checkbox" title="tekst pod obrazkiem">&nbsp;z podpowiedzią (tekst po obrazkiem)</li>
+                <li><input id = "cb-with-lector" type="checkbox" >&nbsp;z głosem</li>
+                <li><input id = "cb-with-reward" type="checkbox" >&nbsp;z oklaskami</li>
             </ul>
         </div>
     </div>
@@ -33,23 +35,24 @@
         </div>
     </div>
     <div class="center-inside" style="margin-top:10px; height:7vh;">
-        <button onclick="selUnsel(selecting)">Zaznacz wszystkie</button>
-        <button onclick="selUnsel(unSelecting)">Odznacz wszystkie</button>                
+        <button onclick="selUnselAll(selecting)">Zaznacz wszystkie</button>
+        <button onclick="selUnselAll(unSelecting)">Odznacz wszystkie</button>                
+        <button id="big-small-button">Wielkie/Małe litery</button>                
     </div>                
 
     <div class="center-inside" style="margin:10px 0;">
-            <a id="start-link" href="index.html" onclick="saveParameters(); return false;">Startuj</a>
+        <a class="start-link" href="/index.html" onclick="saveParameters(); return false;">powrót do Aplikacji</a>
     </div>
 
     <div>
             Aplikacja <strong><em>Literowanka</em></strong> w wersji online zawiera 40 par obrazek-dźwięk.<br />
             Więcej obrazków i dźwięków, możliwość ich nieograniczoinego samodzielnego<br />tworzenia
             oraz więcej opcji ustawień dostępne jest w pełnych wersjach
-            <a href="https://autyzmsoft.pl/ukladanie-slow-z-literek">na Windows</a> i 
+            <a href="https://autyzmsoft.pl/ukladanie-slow-z-literek">na Windows</a> i
             <a href="https://autyzmsoft.pl/ukladanie-wyrazow-z-liter">na Androida</a>
     </div>
     
-    <div id="homepage">
+    <div class="homepage">
         <a href="https://autyzmsoft.pl" title="strona główna" aria-current="page"><i class="fas fa-home"></i></a>
     </div>                    
     

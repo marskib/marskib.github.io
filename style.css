@@ -5,13 +5,10 @@
 }
 
 body {
-    background-color: yellow;
+    background-color: #aa9;
 }
 
 div.content {
-    width: var(--szer-ski);
-    height: var(--wys-ski);
-    margin-top: calc(calc(100vh - var(--wys-ski))/2);
     margin-left: auto;
     margin-right: auto;
 }
@@ -25,27 +22,41 @@ canvas {
 .div-oper-buttons {
     float:right;
     margin-right:1em;
-    border:solid 1px maroon;
 }
 
-.my-button {
+.mix-button {
+    width: 9vw;
+    height: 1.8em;
+    font-weight: bold;
+    font-size: 2em;
+    margin-right: 2px;   
+    background-color: inherit; 
+}
+
+.fwd-button {
     width: 18vw;
     height: 1.8em;
     font-weight: bold;
     font-size: 2em;
+    background-color: green;
     margin-right: 2px;
 }
 
-div#homepage {
-    border: solid 1px maroon;
+div.homepage {
     position: absolute;
     font-size: 4vh;
     left: 1vw;
 }
 
-div#homepage a {
-    color: gray;
+div.homepage a { color: gray;}
+
+#bplay {
+    height:6vh;
+    width:9vw;
+    background-color: inherit;
 }
+
+
 
 /* ----------- na mobilnych aplikacja nie dziala ---------------------- */
 .na-mobilnych {
