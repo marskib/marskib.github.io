@@ -2,14 +2,14 @@
 
 //default table of phrases in case localStorage is empty:
 let phrases = [
-    "zegar",    "łyżka",    "bluzka",    "chleb",       "choinka",
-    "cukierki", "czajnik",  "czekolada", "dziewczynka", "długopis",
-    "grzebień", "jabłko",   "klocki",    "kot",         "kredki",
-    "krzesło",  "książka",  "lampa",     "miotła",      "miś",
-    "myszka",   "młotek",   "nożyczki",  "nóż",         "odkurzacz",
-    "okno",     "okulary",  "ołówek",    "pies",        "pilot",
-    "piłka",    "poduszka", "pomidory",  "ręcznik",     "spodnie", 
-    "słodycze", "talerz",   "widelec",   "wieża",       "zebra", 
+    "ZEGAR",    "ŁYŻKA",    "BLUZKA",    "CHLEB",       "CHOINKA",
+    "CUKIERKI", "CZAJNIK",  "CZEKOLADA", "DZIEWCZYNKA", "DŁUGOPIS",
+    "GRZEBIEŃ", "JABŁKO",   "KLOCKI",    "KOT",         "KREDKI",
+    "KRZESŁO",  "KSIĄŻKA",  "LAMPA",     "MIOTŁA",      "MIŚ",
+    "MYSZKA",   "MŁOTEK",   "NOŻYCZKI",  "NÓŻ",         "ODKURZACZ",
+    "OKNO",     "OKULARY",  "OŁÓWEK",    "PIES",        "PILOT",
+    "PIŁKA",    "PODUSZKA", "POMIDORY",  "RĘCZNIK",     "SPODNIE", 
+    "SŁODYCZE", "TALERZ",   "WIDELEC",   "WIEŻA",       "ZEBRA", 
     ];    
 
 let canvas  = document.getElementById('canvas');
@@ -252,7 +252,7 @@ function allInArea(){
 
     //actual comparing:
     if (phrInArea.toString() === phrBeingGuessed.toString()) { //Zwyciestwo!!!
-        odegrajEfekty('ding.mp3',100, 'oklaski.ogg',800);
+        odegrajEfekty('ding.mp3',100, 'oklaski.mp3',800);
         setTimeout(trimAndShowThePhrase,500, currentPhrase);
         turnHandlersOff();
         setTimeout(enableButton, 1200, bNextTask);
@@ -477,7 +477,7 @@ function getcurrentImageObj(phrase) {
 function sayThePhrase(phr) {
     if (!parameters.WITH_LECTOR) return;
     disableButton(bPlay);
-    let plikSnd = new Audio("zasoby/" + phr.toLowerCase() +'.ogg');
+    let plikSnd = new Audio("zasoby/" + phr.toLowerCase() +'.mp3');
     plikSnd.onended = ()=>{
         // setTimeout(enableButton, 2000, bNextTask);
         setTimeout(enableButton, 2000, bPlay);

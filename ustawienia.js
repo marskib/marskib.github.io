@@ -3,14 +3,14 @@ const NBSP = String.fromCharCode(160); // Non-breakable HTML space is char 160
 
 //Defaultowa tablica z wyrazami:
 let phrases = [
-    "zegar",    "łyżka",    "bluzka",    "chleb",       "choinka",
-    "cukierki", "czajnik",  "czekolada", "dziewczynka", "długopis",
-    "grzebień", "jabłko",   "klocki",    "kot",         "kredki",
-    "krzesło",  "książka",  "lampa",     "miotła",      "miś",
-    "myszka",   "młotek",   "nożyczki",  "nóż",         "odkurzacz",
-    "okno",     "okulary",  "ołówek",    "pies",        "pilot",
-    "piłka",    "poduszka", "pomidory",  "ręcznik",     "spodnie", 
-    "słodycze", "talerz",   "widelec",   "wieża",       "zebra", 
+    "ZEGAR",    "ŁYŻKA",    "BLUZKA",    "CHLEB",       "CHOINKA",
+    "CUKIERKI", "CZAJNIK",  "CZEKOLADA", "DZIEWCZYNKA", "DŁUGOPIS",
+    "GRZEBIEŃ", "JABŁKO",   "KLOCKI",    "KOT",         "KREDKI",
+    "KRZESŁO",  "KSIĄŻKA",  "LAMPA",     "MIOTŁA",      "MIŚ",
+    "MYSZKA",   "MŁOTEK",   "NOŻYCZKI",  "NÓŻ",         "ODKURZACZ",
+    "OKNO",     "OKULARY",  "OŁÓWEK",    "PIES",        "PILOT",
+    "PIŁKA",    "PODUSZKA", "POMIDORY",  "RĘCZNIK",     "SPODNIE", 
+    "SŁODYCZE", "TALERZ",   "WIDELEC",   "WIEŻA",       "ZEBRA", 
     ];
 
 let phrasesFromStorage = [];
@@ -69,7 +69,7 @@ function buildListOfPhrases(baseArray=phrases, controlArray=phrases) {
         //1.changing letter register in phrases array
         let f;
         let elements = document.querySelectorAll("#item-list li");
-        //what is the size of the letters on the screen? We'll know how to chenge them:
+        //what is the size of the letters on the screen? Then we'll know how to change them:
         if (elements[0].innerText.toUpperCase()===elements[0].innerText)
             f=(s)=>s.toLowerCase();
         else
